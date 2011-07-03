@@ -1,8 +1,12 @@
+ABOUT
+-----
 Dropbox OAuth Client for PHP
 
-Draws implementation and a lot of the common code for the OAuth flow from abraham/twitteroauth.
+A modification of Abraham's TwitterOAuth library to work with Dropbox.
 
-Wanted a library that worked identically to twitteroauth, for ease of use.
+Slight fixes to abstract away the differences between the two site's
+implementation of the OAuth specifications. If you know how TwitterOAuth works, 
+you'll have no problems implementing Dropbox with this one.
 
 v0.1.0
-- Base functionality only, you can get files, but not push files.
+- Base functionality only, you can get files, not push files, yet.
