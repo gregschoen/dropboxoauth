@@ -1,0 +1,8 @@
+Dropbox OAuth Client for PHP
+
+Draws implementation and a lot of the common code for the OAuth flow from abraham/twitteroauth.
+
+Wanted a library that worked identically to twitteroauth, for ease of use.
+
+v0.1.0
+- Base functionality only, you can get files, but not push files.
