@@ -1,0 +1,38 @@
+QUICK LINKS
+-----------
+My Apps
+https://www.dropbox.com/developers/apps
+
+API Documentation
+https://www.dropbox.com/developers/docs#api-specification
+
+TwitterOAuth
+https://github.com/abraham/twitteroauth
+
+TwitterOAuth Documentation
+https://github.com/abraham/twitteroauth/blob/master/DOCUMENTATION
+
+USAGE
+-----
+Get Request Token and Redirect
+<code>
+$oauth = new DropboxOAuth($consumer_key,$consumer_secret);
+$request = $oauth->getRequestToken($callback_url);
+$url = $oauth->getAuthorizeURL($request);
+</code>
+
+Get Access Token
+<code>
+$oauth = new DropboxOAuth($consumer_key,$consumer_secret,$request['oauth_token'],$request['oauth_token_secret']);
+$token = $oauth->getAccessToken();
+</code>
+
+Using the API
+<code>
+$oauth = new DropboxOAuth($consumer_key,$consumer_secret,$user_key,$user_secret);
+$account = $oauth->get("http://api.dropbox.com/0/account/info");
+$metadata = $oauth->get("http://api.dropbox.com/0/metadata/dropbox/");
+$file = $oauth->pull("http://api-content.dropbox.com/0/files/dropbox/my-test-file.txt");
+</code>
+
+Please note that ->pull() is used to ->get() without doing the automatic json_decode. 
