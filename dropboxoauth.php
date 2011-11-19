@@ -11,7 +11,7 @@ class DropboxOAuth
 {
 	public $http_code;
 	public $url;
-	public $host = "http://api.dropbox.com/1/";
+	public $host = "https://api.dropbox.com/1/";
 	public $timeout = 10;
 	public $connecttimeout = 10;
 	public $ssl_verifypeer = FALSE;
@@ -22,17 +22,17 @@ class DropboxOAuth
 
 	function accessTokenURL()
 	{
-		return 'http://api.dropbox.com/1/oauth/access_token';
+		return 'https://api.dropbox.com/1/oauth/access_token';
 	}
 
 	function authorizeURL()
 	{
-		return 'http://www.dropbox.com/1/oauth/authorize';
+		return 'https://www.dropbox.com/1/oauth/authorize';
 	}
 
 	function requestTokenURL()
 	{
-		return 'http://api.dropbox.com/1/oauth/request_token';
+		return 'https://api.dropbox.com/1/oauth/request_token';
 	}
 
 	function lastStatusCode()
