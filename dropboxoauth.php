@@ -11,9 +11,9 @@ class DropboxOAuth
 {
 	public $http_code;
 	public $url;
-	public $host = "http://api.dropbox.com/0/";
-	public $timeout = 30;
-	public $connecttimeout = 30;
+	public $host = "http://api.dropbox.com/1/";
+	public $timeout = 10;
+	public $connecttimeout = 10;
 	public $ssl_verifypeer = FALSE;
 	public $format = 'json';
 	public $decode_json = TRUE;
@@ -22,17 +22,17 @@ class DropboxOAuth
 
 	function accessTokenURL()
 	{
-		return 'http://api.dropbox.com/0/oauth/access_token';
+		return 'http://api.dropbox.com/1/oauth/access_token';
 	}
 
 	function authorizeURL()
 	{
-		return 'http://www.dropbox.com/0/oauth/authorize';
+		return 'http://www.dropbox.com/1/oauth/authorize';
 	}
 
 	function requestTokenURL()
 	{
-		return 'http://api.dropbox.com/0/oauth/request_token';
+		return 'http://api.dropbox.com/1/oauth/request_token';
 	}
 
 	function lastStatusCode()
@@ -84,7 +84,7 @@ class DropboxOAuth
 	// dropbox does not use the authenticate method
 	// function getAuthenticateURL($token)
 	
-	// also appears to not use the verifier string either
+	// also appears to not use the verifier string
 	function getAccessToken($oauth_verifier = FALSE)
 	{
 		$parameters = array();
@@ -114,12 +114,16 @@ class DropboxOAuth
 		return $this->oAuthRequest($url, 'GET', $parameters);
 	}
 	
-	// placeholder for upload logic
-	function push()
+	function put($url, $filename)
 	{
-		
+		$response = $this->oAuthRequest($url, 'PUT', array(), $filename);
+		if ($this->format === 'json' && $this->decode_json)
+		{
+			return json_decode($response);
+		}
+		return $response;
 	}
-	
+
 	function post($url, $parameters = array())
 	{
 		$response = $this->oAuthRequest($url, 'POST', $parameters);
@@ -140,24 +144,27 @@ class DropboxOAuth
 		return $response;
 	}
 
-	function oAuthRequest($url, $method, $parameters)
+	function oAuthRequest($url, $method, $parameters, $filename=null)
 	{
 		if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0)
 		{
 			$url = "{$this->host}{$url}.{$this->format}";
 		}
+		
 		$request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
 		$request->sign_request($this->sha1_method, $this->consumer, $this->token);
 		switch ($method)
 		{
 			case 'GET':
 				return $this->http($request->to_url(), 'GET');
+			case 'PUT':
+				return $this->http($request->to_url(), 'PUT', NULL, $filename);
 			default:
 				return $this->http($request->get_normalized_http_url(), $method, $request->to_postdata());
 		}
 	}
 
-	function http($url, $method, $postfields = NULL)
+	function http($url, $method, $postfields = NULL, $filename = NULL)
 	{
 		$this->http_info = array();
 		$ci = curl_init();
@@ -186,6 +193,13 @@ class DropboxOAuth
 				{
 					$url = "{$url}?{$postfields}";
 				}
+				break;
+			case 'PUT':
+					$fp = fopen($filename, "r");
+					curl_setopt($ci, CURLOPT_PUT, 1);
+					curl_setopt($ci, CURLOPT_INFILE, $fp);
+					curl_setopt($ci, CURLOPT_INFILESIZE, filesize($filename));
+				break;
 		}
 
 		curl_setopt($ci, CURLOPT_URL, $url);
