@@ -144,7 +144,7 @@ class DropboxOAuth
 		return $response;
 	}
 
-	function oAuthRequest($url, $method, $parameters, $filename=null)
+	function oAuthRequest($url, $method, $parameters, $filename = NULL)
 	{
 		if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0)
 		{
@@ -195,10 +195,10 @@ class DropboxOAuth
 				}
 				break;
 			case 'PUT':
-					$fp = fopen($filename, "r");
-					curl_setopt($ci, CURLOPT_PUT, 1);
-					curl_setopt($ci, CURLOPT_INFILE, $fp);
-					curl_setopt($ci, CURLOPT_INFILESIZE, filesize($filename));
+				$fp = fopen($filename, "r");
+				curl_setopt($ci, CURLOPT_PUT, 1);
+				curl_setopt($ci, CURLOPT_INFILE, $fp);
+				curl_setopt($ci, CURLOPT_INFILESIZE, filesize($filename));
 				break;
 		}
 
